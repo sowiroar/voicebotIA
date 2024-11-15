@@ -22,7 +22,6 @@
                     <div class="Message mt-3 ">
                         <h3 id="titulo" class="mt-3">IA VoiceBot Conversacional</h3>
                     </div>
-                    <!-- Analisis de sentimientos -->
                 </div>
                 <div class="row text-center mt-3 ">
                     <button type="button" class="btn-record btn-record-green" id="record" onclick="record()">
@@ -105,8 +104,9 @@
     <script src="static/recorder.js"></script>
 
     <script type="text/javascript">
-        document.getElementById("report").style.display="none";
-        document.getElementById("wave").style.display="";
+        document.getElementById("report").classList.add("oculto");
+        document.getElementById("wave").classList.remove("oculto");
+
 
         recorder("/audio", response => {
             document.getElementById("record").style.display="";
@@ -125,9 +125,8 @@
                 audio.setAttribute("src", "static/" + audioFile + "?t=" + new Date().getTime());
                 audio.play();
 
-                document.getElementById("report").style.display="";
-                document.getElementById("wave").style.display="none";
-
+                document.getElementById("report").classList.remove("oculto");
+                document.getElementById("wave").classList.add("oculto");
             }
         });
     </script>

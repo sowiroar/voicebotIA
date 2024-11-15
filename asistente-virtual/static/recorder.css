@@ -51,3 +51,14 @@ body {
 #text {
     background-color: #f3f3f3;
 }
+
+#report, #wave {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s ease; 
+}
+
+.oculto {
+    opacity: 0;
+    visibility: hidden;
+}
