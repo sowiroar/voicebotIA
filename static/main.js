@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById("total_palabras").innerText = informe.Costos_Estimados.Total_Palabras;
                 document.getElementById("total_tokens").innerText = informe.Costos_Estimados.Total_Tokens;
                 document.getElementById("costo_total").innerText = informe.Costos_Estimados.Costo_Total;
+                document.getElementById("sentimiento_detectado").innerText = informe.Sentimiento_Detectado;
+                document.getElementById("emociones_dominantes").innerText = informe.Emociones_Dominantes.join(", ");
+                document.getElementById("indicador_negociacion").innerText = informe.Indicador_Negociacion;
             } else {
                 console.error("Error al generar el informe:", data.message);
                 alert("Error al generar el informe: " + data.message);

@@ -68,15 +68,18 @@ class LLM():
 
     def generar_informe(self):
         # Análisis de emociones y sentimientos en todos los mensajes
-        analisis_emociones = self.analizar_emociones(" ".join([msg['content'] for msg in self.messages if msg['role'] == "user"]))
+        user_messages = [msg['content'] for msg in self.messages if msg['role'] == "user"]
+        print(f"Mensajes del usuario para análisis: {user_messages}")
+        analisis_emociones = self.analizar_emociones(" ".join(user_messages))
 
         # Calcular el número total de palabras y tokens
         total_palabras = sum(len(msg['content'].split()) for msg in self.messages if msg['role'] == "user")
         total_tokens = total_palabras  # Aproximación de tokens
+        print(f"Total de palabras: {total_palabras}, Total de tokens: {total_tokens}")
 
         # Cálculo de costos
-        costo_entrada = 0.15 * total_tokens / 1000000
-        costo_salida = 0.60 * total_tokens / 1000000
+        costo_entrada = 0.15 * total_tokens / 1_000_000
+        costo_salida = 0.60 * total_tokens / 1_000_000
         costo_total = costo_entrada + costo_salida
 
         # Crear el informe en formato diccionario
@@ -118,10 +121,11 @@ class LLM():
 
         # Agregar el mensaje del usuario a la conversación
         self.messages.append({"role": "user", "content": user_input})
+        print(f"Mensaje del usuario agregado: {user_input}")
 
         # Llamada a la API para obtener la respuesta del chatbot
         response = openai.ChatCompletion.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=self.messages,
             temperature=1,
             max_tokens=2048,
@@ -176,6 +180,7 @@ class LLM():
         # Obtener y mostrar la respuesta del chatbot
         bot_response = response['choices'][0]['message']['content']
         self.messages.append({"role": "assistant", "content": bot_response})
+        print(f"Respuesta del bot agregada: {bot_response}")
 
         # Verificar si el bot ha hecho una oferta de pago
         if "ofrecemos un plan de pago" in bot_response.lower():
