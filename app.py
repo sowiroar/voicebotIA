@@ -5,7 +5,7 @@ from transcriber import Transcriber
 from llm import LLM
 from tts import TTS
 
-# #Cargar llaves del archivo .env
+# Cargar llaves del archivo .env
 openai.api_key = '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'
 app = Flask(__name__)
 
@@ -35,5 +35,20 @@ def audio():
             tts = TTS()
             tts_file = tts.process(final_response)
             return jsonify({"result": "ok", "text": final_response, "file": tts_file})
+    except Exception as e:
+        return jsonify({"result": "error", "message": str(e)})
+
+@app.route("/end_call", methods=["POST"])
+def end_call():
+    try:
+        # Utilizar el LLM para generar el informe
+        llm = LLM()
+        response = llm.process_functions("salir")
+        
+        # Leer el informe generado
+        with open("informe_conversacion.json", "r") as json_file:
+            informe = json.load(json_file)
+        
+        return jsonify({"result": "ok", "informe": informe})
     except Exception as e:
         return jsonify({"result": "error", "message": str(e)})

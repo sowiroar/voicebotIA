@@ -1,5 +1,9 @@
 import openai
 import json
+from transformers import pipeline
+
+# Cargar el modelo de análisis de sentimientos en español usando transformers
+sentiment_analyzer = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
 # Base de datos sintética de clientes
 clientes = [
@@ -56,14 +60,50 @@ class LLM():
                 return cliente
         return None
 
+    def analizar_emociones(self, respuesta):
+        resultado = sentiment_analyzer(respuesta)[0]
+        sentimiento = "positivo" if resultado["label"] == "5 stars" else "negativo"
+        emociones_detectadas = ["alegría"] if sentimiento == "positivo" else ["enojo"]
+        return {"emociones": emociones_detectadas, "sentimiento": sentimiento, "score": resultado["score"]}
+
+    def generar_informe(self):
+        # Análisis de emociones y sentimientos en todos los mensajes
+        analisis_emociones = self.analizar_emociones(" ".join([msg['content'] for msg in self.messages if msg['role'] == "user"]))
+
+        # Calcular el número total de palabras y tokens
+        total_palabras = sum(len(msg['content'].split()) for msg in self.messages if msg['role'] == "user")
+        total_tokens = total_palabras  # Aproximación de tokens
+
+        # Cálculo de costos
+        costo_entrada = 0.15 * total_tokens / 1_000_000
+        costo_salida = 0.60 * total_tokens / 1_000_000
+        costo_total = costo_entrada + costo_salida
+
+        # Crear el informe en formato diccionario
+        informe = {
+            "Sentimiento_Detectado": analisis_emociones["sentimiento"],
+            "Emociones_Dominantes": analisis_emociones["emociones"],
+            "Indicador_Negociacion": "100/100" if self.acuerdo_negociado else "0/100",
+            "Costos_Estimados": {
+                "Total_Palabras": total_palabras,
+                "Total_Tokens": total_tokens,
+                "Costo_Total": costo_total
+            },
+            "Cliente": self.cliente_actual
+        }
+
+        # Guardar el informe en un archivo JSON
+        with open("informe_conversacion.json", "w") as json_file:
+            json.dump(informe, json_file, indent=4)
+        print("Informe guardado como informe_conversacion.json")
+        print(informe)
+
     def process_functions(self, text):
         user_input = text
 
         # Si el usuario ingresa 'salir', terminamos la conversación
         if user_input.lower() == "salir":
             print("La conversación ha terminado.")
-            report = self.generate_report()
-            print(report)
             self.generar_informe()
             return "Informe generado y guardado como JSON."
 
@@ -81,13 +121,13 @@ class LLM():
 
         # Llamada a la API para obtener la respuesta del chatbot
         response = openai.ChatCompletion.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=self.messages,
             temperature=1,
-            max_tokens=5000,
+            max_tokens=2048,
             top_p=1,
-            frequency_penalty=0.05,
-            presence_penalty=0.05,
+            frequency_penalty=0,
+            presence_penalty=0,
             tools=[{
                 "type": "function",
                 "function": {
@@ -142,62 +182,3 @@ class LLM():
             self.acuerdo_negociado = True
 
         return bot_response
-
-    def analizar_emociones(self, respuesta):
-        emociones_positivas = ["satisfecho", "contento", "feliz", "agradecido"]
-        emociones_negativas = ["molesto", "enojado", "frustrado", "confundido"]
-        emociones_detectadas = []
-
-        if any(emo in respuesta.lower() for emo in emociones_positivas):
-            emociones_detectadas.append("alegría")
-            sentimiento = "positivo"
-        elif any(emo in respuesta.lower() for emo in emociones_negativas):
-            emociones_detectadas.append("enojo")
-            sentimiento = "negativo"
-        else:
-            emociones_detectadas.append("neutral")
-            sentimiento = "neutral"
-
-        return {"emociones": emociones_detectadas, "sentimiento": sentimiento}
-
-    def generar_informe(self):
-        # Análisis de emociones y sentimientos en todos los mensajes
-        analisis_emociones = self.analizar_emociones(" ".join([msg['content'] for msg in self.messages if msg['role'] == "user"]))
-
-        # Calcular el número total de palabras y tokens
-        total_palabras = sum(len(msg['content'].split()) for msg in self.messages if msg['role'] == "user")
-        total_tokens = total_palabras  # Aproximación de tokens
-
-        # Cálculo de costos
-        costo_entrada = 0.15 * total_tokens / 1_000_000
-        costo_salida = 0.60 * total_tokens / 1_000_000
-        costo_total = costo_entrada + costo_salida
-
-        # Crear el informe en formato diccionario
-        informe = {
-            "Sentimiento_Detectado": analisis_emociones["sentimiento"],
-            "Emociones_Dominantes": analisis_emociones["emociones"],
-            "Indicador_Negociacion": "100/100" if self.acuerdo_negociado else "0/100",
-            "Costos_Estimados": {
-                "Total_Palabras": total_palabras,
-                "Total_Tokens": total_tokens,
-                "Costo_Total": costo_total
-            },
-            "Cliente": self.cliente_actual
-        }
-
-        # Guardar el informe en un archivo JSON
-        with open("informe_conversacion.json", "w") as json_file:
-            json.dump(informe, json_file, indent=4)
-            print(informe)
-        print("Informe guardado como informe_conversacion.json")
-        
-    def generate_report(self):
-        # Generar un reporte detallado basado en la conversación
-        report = {
-            "emotions_detected": self.emotions_detected,
-            "negotiation_terms": self.negotiation_terms,
-            "conversation": self.messages,
-            "cliente": self.cliente_actual
-        }
-        return json.dumps(report, indent=4)
