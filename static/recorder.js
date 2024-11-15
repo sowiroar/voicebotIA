@@ -1,5 +1,4 @@
-
-    let blobs = [];
+let blobs = [];
     let stream;
     let rec;
     let recordUrl;
@@ -95,3 +94,26 @@
             audioResponseHandler(response);
         }
     }
+
+    document.getElementById("end_call_button").addEventListener("click", function() {
+        fetch("/end_call", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === "ok") {
+                const informe = data.informe;
+                document.getElementById("total_palabras").innerText = informe.Costos_Estimados.Total_Palabras;
+                document.getElementById("total_tokens").innerText = informe.Costos_Estimados.Total_Tokens;
+                document.getElementById("costo_total").innerText = informe.Costos_Estimados.Costo_Total;
+            } else {
+                alert("Error al generar el informe: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+    });

@@ -41,6 +41,7 @@ def audio():
 @app.route("/end_call", methods=["POST"])
 def end_call():
     try:
+        print("Solicitud recibida en /end_call")
         # Utilizar el LLM para generar el informe
         llm = LLM()
         response = llm.process_functions("salir")
@@ -49,6 +50,8 @@ def end_call():
         with open("informe_conversacion.json", "r") as json_file:
             informe = json.load(json_file)
         
+        print("Informe generado:", informe)
         return jsonify({"result": "ok", "informe": informe})
     except Exception as e:
+        print("Error al generar el informe:", e)
         return jsonify({"result": "error", "message": str(e)})
