@@ -4,7 +4,8 @@ body {
 }
 
 .header img {
-    width: 200px
+    width: 200px;
+    margin-top: 20px
 }
 .btn-record {
     border: none;
@@ -13,10 +14,19 @@ body {
     width: 100px;
     height: 100px;
 }
+#titulo {
+    font-size: 2em;
+    font-weight: bold;
+    background: linear-gradient(90deg, #03bd9e, #8d6ea9, #3189d9, #464193);
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
 .btn-record-green {
-    background-color: #0aca8a;
-    color: #0aca8a !important;
+    background-color: #f3f3f3;
+    margin: 20px;
 }
 
 .btn-record-red {
@@ -37,4 +47,8 @@ body {
 
 .mic-img {
     width: 30px;
+}
+
+#text {
+    background-color: #f3f3f3;
 }
