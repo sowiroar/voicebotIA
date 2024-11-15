@@ -75,8 +75,8 @@ class LLM():
         total_tokens = total_palabras  # Aproximación de tokens
 
         # Cálculo de costos
-        costo_entrada = 0.15 * total_tokens / 1_000_000
-        costo_salida = 0.60 * total_tokens / 1_000_000
+        costo_entrada = 0.15 * total_tokens / 1000000
+        costo_salida = 0.60 * total_tokens / 1000000
         costo_total = costo_entrada + costo_salida
 
         # Crear el informe en formato diccionario
@@ -121,7 +121,7 @@ class LLM():
 
         # Llamada a la API para obtener la respuesta del chatbot
         response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
+            model="gpt-4o",
             messages=self.messages,
             temperature=1,
             max_tokens=2048,
