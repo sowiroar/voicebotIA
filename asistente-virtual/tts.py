@@ -5,11 +5,11 @@ import requests
 class TTS():
     def __init__(self):
         self.key = 'sk_4037a10fcbc06e8e1e8653ff8cb804c84fc85a078bffcd53'
-        
+    
     def process(self, text):
         CHUNK_SIZE = 1024
-        # Utiliza la voz especifica de Bella
-        url = "https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL"
+        # Utiliza la voz clonada con el ID proporcionado
+        url = "https://api.elevenlabs.io/v1/text-to-speech/BxN7zlH0BixwSekY7lQm"
 
         headers = {
             "Accept": "audio/mpeg",
@@ -29,9 +29,11 @@ class TTS():
         # Nombre de archivo constante
         file_name = "response.mp3"
         response = requests.post(url, json=data, headers=headers)
-        with open("static/" + file_name, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
-                if chunk:
-                    f.write(chunk)
-                    
-        return file_name
+        if response.status_code == 200:
+            with open("static/" + file_name, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
+                    if chunk:
+                        f.write(chunk)
+            return file_name
+        else:
+            raise Exception(f"Error in TTS API call: {response.status_code} - {response.text}")
