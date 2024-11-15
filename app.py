@@ -6,7 +6,7 @@ from llm import LLM
 from tts import TTS
 
 # Cargar llaves del archivo .env
-openai.api_key = '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'
+openai.api_key = ''
 app = Flask(__name__)
 
 @app.route("/")
