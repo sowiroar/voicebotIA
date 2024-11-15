@@ -1,3 +1,11 @@
+body {
+    margin: 0;                    
+    padding: 0;                  
+}
+
+.header img {
+    width: 200px
+}
 .btn-record {
     border: none;
     padding: 25px;
@@ -7,7 +15,8 @@
 }
 
 .btn-record-green {
-    background-color: #01c1fc;
+    background-color: #0aca8a;
+    color: #0aca8a !important;
 }
 
 .btn-record-red {
