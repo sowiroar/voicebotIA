@@ -38,57 +38,60 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="row mt-3 px-3">
-                    <h3>Indicadores</h3>
-                    <div class="row">
-                        <div class="col">
-                            <p>Sentimiento Detectado:</p>
+                <img id="wave" src="static/img/wave.jpg" alt="">
+                <div id="report">
+                    <div class="row mt-3 px-3">
+                        <h3>Indicadores</h3>
+                        <div class="row">
+                            <div class="col">
+                                <p>Sentimiento Detectado:</p>
+                            </div>
+                            <div class="col">
+                                <p></p>
+                            </div>
                         </div>
-                        <div class="col">
-                            <p></p>
+                        <div class="row">
+                            <div class="col">
+                                <p>Emociones Dominantes:</p>
+                            </div>
+                            <div class="col">
+                                <p></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <p>Emociones Dominantes</p>
+                        <div class="row">
+                            <div class="col">
+                                <p>Indicador de Negociación:</p>
+                            </div>
+                            <div class="col">
+                                <p></p>
+                            </div>
                         </div>
-                        <div class="col">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <p>Indicador de Negociación</p>
-                        </div>
-                        <div class="col">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <p>Indicador de Negociación</p>
-                        </div>
-                        <div class="col">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3 px-3">
-                    <h3>Costos estimados de la llamada</h3>
-                    <div class="row">
-                        <div class="col">
-                            <p>Total Palabras</p>
-                        </div>
-                        <div class="col">
-                            <p></p>
+                        <div class="row">
+                            <div class="col">
+                                <p>Indicador de Negociación:</p>
+                            </div>
+                            <div class="col">
+                                <p></p>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <p>Total Tokens</p>
+                    <div class="row mt-3 px-3">
+                        <h3>Costos estimados de la llamada:</h3>
+                        <div class="row">
+                            <div class="col">
+                                <p>Total Palabras:</p>
+                            </div>
+                            <div class="col">
+                                <p></p>
+                            </div>
                         </div>
-                        <div class="col">
-                            <p></p>
+                        <div class="row">
+                            <div class="col">
+                                <p>Total Tokens:</p>
+                            </div>
+                            <div class="col">
+                                <p></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,9 +104,13 @@
     <script src="static/recorder.js"></script>
 
     <script type="text/javascript">
+        document.getElementById("report").style.display="none";
+        document.getElementById("wave").style.display="";
+
         recorder("/audio", response => {
             document.getElementById("record").style.display="";
             document.getElementById("stop").style.display="none";
+            
             if (!response || response == null) {
                 console.log("No response");
                 return;
@@ -116,6 +123,10 @@
                 let audio = new Audio();
                 audio.setAttribute("src", "static/" + audioFile + "?t=" + new Date().getTime());
                 audio.play();
+
+                document.getElementById("report").style.display="";
+                document.getElementById("wave").style.display="none";
+
             }
         });
     </script>
