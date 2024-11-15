@@ -1,0 +1,13 @@
+{
+    "Sentimiento_Detectado": "negativo",
+    "Emociones_Dominantes": [
+        "enojo"
+    ],
+    "Indicador_Negociacion": "0/100",
+    "Costos_Estimados": {
+        "Total_Palabras": 0,
+        "Total_Tokens": 0,
+        "Costo_Total": 0.0
+    },
+    "Cliente": null
+}
